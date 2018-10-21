@@ -1,0 +1,49 @@
+import java.util.Scanner;
+
+public class caesarcipher {
+    public static void main(String args[]){
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the String");
+        String pt=sc.nextLine();
+        System.out.println("Enter the key");
+        int k=sc.nextInt();
+        String sb="";
+        String pt1="";
+        char a1='a';
+        int j=0;
+        int val=0;
+        String pt2=pt.toUpperCase();
+        for(int i=0;i<pt2.length();i++){
+          int pos=pt2.charAt(i)-65;
+          if(pos==-33) {
+              val = 32;
+              a1=(char)val;
+
+          }else {
+
+              j = (((pos + k) % 26)+26)%26;
+
+              val = j + 65;
+
+              a1 = (char) val;
+
+
+          }
+            sb += Character.toString(a1);
+        }
+       System.out.println(sb);
+        for(int i=0;i<sb.length();i++){
+            int pos=sb.charAt(i)-65;
+            if(pos==-33){
+                val=32;
+                a1=(char)val;
+            }else {
+                j = (((pos - k) % 26)+26)%26;
+                val = j + 65;
+                a1 = (char) val;
+            }
+            pt1+=Character.toString(a1);
+        }
+        System.out.println(pt1);
+    }
+}
