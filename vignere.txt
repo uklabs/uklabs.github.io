@@ -1,0 +1,56 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+public class vignere {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        char al[]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        int k=0,p=0;
+        String res="",res1="";
+        System.out.println("enter the key");
+        String key=sc.nextLine();
+        System.out.println("enter the plain text");
+        StringBuilder msg=new StringBuilder(sc.next());
+        char arr[]=key.toCharArray();
+        int n=arr.length;
+        ArrayList<Character> keyarr=new ArrayList<Character>();
+        if((msg.length()+1)%2==0) {
+            for(int i=0;i<msg.length();i++) {
+                keyarr.add(arr[i%n]);
+            }
+        }else {
+            msg.append('x');
+            for(int i=0;i<msg.length();i++) {
+                keyarr.add(arr[i%n]);    	  }      }
+
+        for(int i=0;i<msg.length();i++) {
+            char c=msg.charAt(i);
+            char c1=keyarr.get(i);
+            for(int j=0;j<al.length;j++) {
+                if(c==al[j]) {
+                    p=j;
+                }
+                if(c1==al[j]) {
+                    k=j;
+                }
+            }
+            int num=(k+p)%26;
+            res+=al[num];
+        }
+        System.out.println("Encrypted text= "+res);
+        for(int i=0;i<res.length();i++) {
+            char c=res.charAt(i);
+            char c1=keyarr.get(i);
+            for(int j=0;j<al.length;j++) {
+                if(c==al[j]) {
+                    p=j;
+                }
+                if(c1==al[j]) {
+                    k=j;
+                }
+            }
+            int num=Math.abs((k-p))%26;
+            res1+=al[num];
+        }
+        System.out.println("Decrypted Text=  "+res1);
+    }
+}
