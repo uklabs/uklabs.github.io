@@ -1,0 +1,717 @@
+//Caesar Cipher
+import java.util.Scanner;
+
+public class caesarcipher {
+    public static void main(String args[]){
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the String");
+        String pt=sc.nextLine();
+        System.out.println("Enter the key");
+        int k=sc.nextInt();
+        String sb="";
+        String pt1="";
+        char a1='a';
+        int j=0;
+        int val=0;
+        String pt2=pt.toUpperCase();
+        for(int i=0;i<pt2.length();i++){
+          int pos=pt2.charAt(i)-65;
+          if(pos==-33) {
+              val = 32;
+              a1=(char)val;
+
+          }else {
+
+              j = (((pos + k) % 26)+26)%26;
+
+              val = j + 65;
+
+              a1 = (char) val;
+
+
+          }
+            sb += Character.toString(a1);
+        }
+       System.out.println(sb);
+        for(int i=0;i<sb.length();i++){
+            int pos=sb.charAt(i)-65;
+            if(pos==-33){
+                val=32;
+                a1=(char)val;
+            }else {
+                j = (((pos - k) % 26)+26)%26;
+                val = j + 65;
+                a1 = (char) val;
+            }
+            pt1+=Character.toString(a1);
+        }
+        System.out.println(pt1);
+    }
+}
+//DES Cipher
+import javax.swing.*;
+import java.security.SecureRandom;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Random ;
+import java.util.Scanner;
+public class DES1 {
+    byte[] skey = new byte[1000];
+    String skeyString;
+    static byte[] raw;
+
+    String inputMessage,encryptedData,decryptedMessage;
+    public DES1() {
+        try {
+            generateSymmetricKey();
+            Scanner sc=new Scanner(System.in);
+            System.out.println("Enter message to encrypt");
+            inputMessage=sc.next();
+            byte[] ibyte = inputMessage.getBytes();
+            byte[] ebyte=encrypt(raw, ibyte);
+            String encryptedData = new String(ebyte);
+            System.out.println("Encrypted message "+encryptedData);
+            byte[] dbyte= decrypt(raw,ebyte);
+            String decryptedMessage = new String(dbyte);
+            System.out.println("Decrypted message "+decryptedMessage);
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+    void generateSymmetricKey() {
+        try {
+            Random r = new Random();
+            int num = r.nextInt(10000);
+            String knum = String.valueOf(num);
+            byte[] knumb = knum.getBytes();
+            skey=getRawKey(knumb);
+            skeyString = new String(skey);
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+    private static byte[] getRawKey(byte[] seed) throws Exception {
+        KeyGenerator kgen = KeyGenerator.getInstance("DES");
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        sr.setSeed(seed);
+        kgen.init(56, sr);
+        SecretKey skey = kgen.generateKey();
+        raw = skey.getEncoded();
+        return raw;
+    }
+    private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "DES");
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        byte[] encrypted = cipher.doFinal(clear);
+        return encrypted;
+    }
+    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "DES");
+        Cipher cipher = Cipher.getInstance("DES");
+
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] decrypted = cipher.doFinal(encrypted);
+        return decrypted;
+    }
+    public static void main(String args[]) {
+        DES1 des = new DES1();
+    }
+}
+//Diffie
+import java.util.*;
+class diffieHellmanAlg
+{
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        int p = 11;
+        int g = 2;
+        int x = 9;
+
+        int y = 4;
+        double aliceSends	= (Math.pow(g,x))%p;
+        double bobComputes = (Math.pow(aliceSends,y))%p;
+        double bobSends	= (Math.pow(g,y))%p;
+        double aliceComputes = (Math.pow(bobSends,x))%p;
+        double sharedSecret = (Math.pow(g,(x*y)))%p;
+        System.out.println("simulation of Diffie-Hellman key exchange algorithm");
+        System.out.println("aliceSends	: " + aliceSends);
+        System.out.println("bobComputes : " + bobComputes);
+        System.out.println("bobSends	: " + bobSends);
+        System.out.println("aliceComputes : " + aliceComputes);
+        System.out.println("sharedSecret : " + sharedSecret);
+
+        if ((aliceComputes == sharedSecret) && (aliceComputes == bobComputes))
+            System.out.println("success: shared secrets matches! " + sharedSecret);
+        else
+            System.out.println("error: shared secrets does not match");
+    }
+}
+//DSS
+import java.util.*;
+import java.math.BigInteger;
+class dss
+{
+    final static BigInteger one = new BigInteger("1");
+    final static BigInteger zero = new BigInteger("0");
+    public static BigInteger getNextPrime(String ans)
+    {
+        BigInteger test = new BigInteger(ans); while (!test.isProbablePrime(99))
+    {
+        test = test.add(one);
+    }
+        return test;
+    }
+    public static BigInteger findQ(BigInteger n)
+    {
+        BigInteger start = new BigInteger("2");
+        while (!n.isProbablePrime(99))
+        {
+            while (!((n.mod(start)).equals(zero)))
+            {
+                start = start.add(one);
+            }
+            n = n.divide(start);
+        }
+        return n;
+    }
+    public static BigInteger getGen(BigInteger p, BigInteger q,Random r)
+    {
+
+        BigInteger h = new BigInteger(p.bitLength(), r);
+        h = h.mod(p);
+        return h.modPow((p.subtract(one)).divide(q), p);
+    }
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        Random randObj = new Random();
+        BigInteger p = getNextPrime("10600");
+        BigInteger q = findQ(p.subtract(one));
+        BigInteger g = getGen(p,q,randObj);
+        System.out.println("global public key components are:");
+        System.out.println("p is: " + p);
+        System.out.println("q is: " + q);
+        System.out.println("g is: " + g);
+        BigInteger x = new BigInteger(q.bitLength(), randObj); x = x.mod(q);
+        BigInteger y = g.modPow(x,p);
+        BigInteger k = new BigInteger(q.bitLength(), randObj); k = k.mod(q);
+        BigInteger r = (g.modPow(k,p)).mod(q);
+        BigInteger hashVal = new BigInteger(p.bitLength(), randObj);
+        BigInteger kInv = k.modInverse(q);
+        BigInteger s = kInv.multiply(hashVal.add(x.multiply(r)));
+        s = s.mod(q);
+        System.out.println("secret information are:");
+        System.out.println("x (private) is: " + x);
+        System.out.println("k (secret) is: " + k);
+        System.out.println("y (public) is: " + y);
+        System.out.println("h (rndhash) is: " + hashVal);
+        System.out.println("generating digital signature:");
+        System.out.println("r is : " + r);
+        System.out.println("s is : " + s);
+        BigInteger w = s.modInverse(q);
+        BigInteger u1 = (hashVal.multiply(w)).mod(q);
+        BigInteger u2 = (r.multiply(w)).mod(q);
+        BigInteger v = (g.modPow(u1,p)).multiply(y.modPow(u2,p));
+        v = (v.mod(p)).mod(q);
+        System.out.println("verifying digital signature (checkpoints):");
+        System.out.println("w  is : " + w);
+        System.out.println("u1 is : " + u1);
+        System.out.println("u2 is : " + u2);
+        System.out.println("v  is : " + v);
+        if (v.equals(r))
+        {
+
+            System.out.println("success: digital signature is verified! " + r);
+        }
+        else
+        {
+            System.out.println("error: incorrect digital signature");
+        }
+    }
+}
+//Hill Cipher
+import java.util.*;
+class hillCipher
+{
+    /* 3x3 key matrix for 3 characters at once */ public static int[][] keymat = new int[][]
+            { { 1, 2, 1 }, { 2, 3, 2 }, { 2, 2, 1 } };
+    /* key inverse matrix */
+    public static int[][] invkeymat = new int[][]
+            { { -1, 0, 1 }, { 2, -1, 0 }, { -2, 2, -1 } };
+    public static String key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; private static String encode(char a, char b, char c)
+{
+    String ret = ""; int x,y, z;
+    int posa = (int)a - 65;
+    int posb = (int)b - 65; int posc = (int)c - 65;
+    x = posa * keymat[0][0] + posb * keymat[1][0] + posc * keymat[2][0]; y = posa * keymat[0][1] + posb * keymat[1][1] + posc * keymat[2][1]; z = posa * keymat[0][2] + posb * keymat[1][2] + posc * keymat[2][2]; a = key.charAt(x%26);
+    b = key.charAt(y%26); c = key.charAt(z%26); ret = "" + a + b + c; return ret;
+}
+
+    private static String decode(char a, char b, char c)
+    {
+        String ret = ""; int x,y,z;
+        int posa = (int)a - 65; int posb = (int)b - 65; int posc = (int)c - 65;
+        x = posa * invkeymat[0][0]+ posb * invkeymat[1][0] + posc * invkeymat[2][0]; y = posa * invkeymat[0][1]+ posb * invkeymat[1][1] + posc * invkeymat[2][1]; z = posa * invkeymat[0][2]+ posb * invkeymat[1][2] + posc * invkeymat[2][2]; a = key.charAt((x%26<0) ? (26+x%26) : (x%26));
+        b = key.charAt((y%26<0) ? (26+y%26) : (y%26)); c = key.charAt((z%26<0) ? (26+z%26) : (z%26)); ret = "" + a + b + c;
+        return ret;
+    }
+    public static void main (String[] args) throws java.lang.Exception
+    {
+        String msg; String enc = ""; String dec = ""; int n;
+        msg = ("SecurityLaboratory"); System.out.println("simulation of Hill Cipher"); System.out.println("input message : " + msg); msg = msg.toUpperCase();
+        msg = msg.replaceAll("\\s", ""); /* remove spaces */ n = msg.length() % 3;
+/* append padding text X */ if (n != 0)
+    {
+        for(int i = 1; i<= (3-n);i++)
+        {msg+= 'X';
+        }}
+        System.out.println("padded message : " + msg);
+        char[] pdchars = msg.toCharArray(); for (int i=0; i < msg.length(); i+=3)
+    {
+        enc += encode(pdchars[i], pdchars[i+1], pdchars[i+2]);
+    }
+        System.out.println("encoded message : " + enc); char[] dechars = enc.toCharArray();
+        for (int i=0; i< enc.length(); i+=3)
+        {
+            dec += decode(dechars[i], dechars[i+1], dechars[i+2]);
+        }
+        System.out.println("decoded message : " + dec);} }
+//MD5
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
+public class md55 {
+    public static String getMd5(String input)
+    {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void main(String args[]) throws NoSuchAlgorithmException
+    {
+        String s ="";
+        System.out.println("enter your string");
+        Scanner sc=new Scanner(System.in);
+        s=sc.next();
+        System.out.println("Your HashCode Generated by MD5 is: " + getMd5(s));
+    }
+}
+//Playfair
+import java.util.ArrayList;
+import java.util.Scanner;
+public class playfair
+{
+    public static void main(String[] args)
+    {
+        try{
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter the word ");
+            char m1[][] = new char[5][5];
+            char m2[][] = new char[5][5];
+            ArrayList<Character> al = new ArrayList();
+
+            String g = sc.next().toLowerCase();
+            g = g.replace('j', 'i');
+            if(g.length()%2!=0)
+            {
+                g+="x";
+            }
+            for(int i=0;i<g.length();i++)
+            {
+                al.add(g.charAt(i));
+            }
+            System.out.println("Enter the key");
+            String q = sc.next().toLowerCase();
+            String aa="";
+            int qq;
+            for(int i=97;i<123;i++)
+            {
+                if(i==106)
+                    continue;
+                qq=0;
+                for(int j=0;j<q.length();j++)
+                {
+                    if((char)i==q.charAt(j))
+                    {
+                        qq=1;
+                    }
+                }
+                if(qq==0)
+                {
+                    aa+=((char)i);
+                }
+            }
+            q+=aa;
+            m1=matrix(q);
+            q=new StringBuffer(q).reverse().toString();
+            m2=matrix(q);
+            int b[] = new int[4];
+            for(int c=0;c<al.size();c+=2)
+            {
+                if(al.get(c)==al.get(c+1))
+                {
+                    al.add(c+1, 'x');
+                }
+                for(int i=0;i<m1.length;i++)
+                {
+                    for(int j=0;j<m1[i].length;j++)
+                    {
+                        if(m1[i][j]==(al.get(c)))
+                        {
+                            b[0]=i;
+                            b[1]=j;
+                        }
+                    }
+                }
+                for(int i=0;i<m1.length;i++)
+                {
+                    for(int j=0;j<m1[i].length;j++)
+                    {
+                        if(m1[i][j]==(al.get(c+1)))
+                        {
+                            b[2]=i;
+                            b[3]=j;
+                        }
+                    }
+                }
+                if(b[1]==b[3])
+                {
+                    if(b[0]<=b[2])
+                    {
+                        code(1,b,m1,1);
+                    }
+                    else
+                    {
+                        b=change(b);
+                        code(1,b,m2,0);
+                    }
+                }
+                else if(b[0]==b[2])
+                {
+                    if(b[1]<=b[3])
+                    {
+                        code(2,b,m1,1);
+                    }
+                    else
+                    {
+                        b=change(b);
+                        code(2,b,m2,1);
+                    }
+                }
+                else
+                {
+                    System.out.print(m1[b[0]][b[3]]+""+m1[b[2]][b[1]]);
+                }
+            }
+        }catch(Exception e){}
+    }
+    public static void code(int q,int[] b,char[][] m1,int i)
+    {
+        if(q==1)
+        {
+            System.out.print(m1[((b[0]%4)+1)][b[3]]+""+m1[((b[2]%4))+i][b[1]]);
+        }
+        if(q==2)
+        {
+            int j=1;
+            if(b[3]==4)
+            {
+                j=0;
+            }
+            System.out.print(m1[b[2]][(b[1]%4)+i]+""+m1[b[0]][(b[3]%4)+j]);
+        }
+    }
+    public static int[] change(int[] b)
+    {
+        for(int i=0;i<b.length;i++)
+        {
+            switch (b[i])
+            {
+                case 0: b[i]=4; break;
+                case 1: b[i]=3; break;
+                case 3: b[i]=1; break;
+                case 4: b[i]=0; break;
+            }
+        }
+        return b;
+    }
+    public static char[][] matrix(String q)
+    {
+        char mm[][] = new char[5][5];
+        for(int s=0,ss=0;s<5;s++)
+        {
+            for(int t=0;t<5;t++,ss++)
+            {
+                mm[s][t]=q.charAt(ss);
+                System.out.print(mm[s][t]);
+            }
+            System.out.println();
+        }
+        System.out.println();
+        return mm;
+    }
+}
+//Primitive Root
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.TreeSet;
+
+public class Diffie {
+    public static void main(String[] args) {
+                Scanner sc=new Scanner(System.in);
+        int xa,xb,ya,yb,p,ppr,k1,k2;
+        System.out.println("Enter A's Private Key");
+        xa=sc.nextInt();
+        System.out.println("Enter B's Private key");
+        xb=sc.nextInt();
+        System.out.println("Enter a prime Number");
+        p=sc.nextInt();
+          ArrayList<Integer> al = new ArrayList <Integer>(); 
+        int a[] = new int[p-1];
+        for(int i = p-2;i>=0;i--){
+            int k = i+1;
+            for(int j = 1;j<=p-1;j++){
+            int x = (int)(Math.pow(k,j))%p;
+            
+            al.add(x);
+            }
+            
+        }
+        
+       int k =0;
+       ArrayList <Integer> pr = new ArrayList<Integer>();
+       int pows[][] = new int[p-1][p-1];
+       for(int i=0;i<p-1;i++){
+           for( int j=0;j<p-1;j++){
+               pows[i][j] = al.get(k++);
+           }
+       }
+       TreeSet<Integer> hl = new TreeSet<Integer>();
+       for(int i=0;i<10;i++){
+           
+         
+           int q = pows[i][0];
+           for( int j=0;j<p-1;j++){
+               hl.add(pows[i][j]);
+               
+          
+           }
+           if(hl.size()==p-1)
+               pr.add(q);
+           hl.clear();
+           
+       }       // System.out.print(pr.get(0));
+        
+        
+        //System.out.println("Enter a Primitive Root of a prime number");
+        ppr=pr.get(0);
+        ya= (int)Math.pow(ppr,xa)%p;
+        yb=(int)Math.pow(ppr,xb)%p;
+        k1=(int)Math.pow(ya,xb)%p;
+        k2=(int)Math.pow(yb,xa)%p;
+        System.out.println(k1);
+        System.out.println(k2);
+        if(k1==k2){
+            System.out.println("Success");
+        }
+        else
+            System.out.println("Check");
+            
+    }
+    }
+//Railfence
+import java.util.Scanner;
+public class railfence {
+    public static void main(String[] args) {
+        // TODO code application logic here
+        Scanner sc=new Scanner(System.in);
+        String s1="";
+        String s2="";
+        System.out.println("Enter the PlainText");
+        String pt=sc.nextLine();
+        char[] ch=pt.toCharArray();
+        for(int i=0;i<pt.length();i++){
+            if(i%2==0)
+                s1+=Character.toString(ch[i]);
+            else
+                s2+=Character.toString(ch[i]);         }
+        System.out.println("Encrypted Text:" +s1+s2);
+        System.out.print("Decrypted Text:");
+        if(pt.length()%2==0){
+            for(int i=0;i<(pt.length()/2);i++){
+                System.out.print(s1.charAt(i));
+                System.out.print(s2.charAt(i));
+            }         }
+
+
+        else
+        {
+            for(int i=0;i<(pt.length()/2)+1;i++){
+                System.out.print(s1.charAt(i));
+                if(i==(pt.length()/2))
+                    break;
+                System.out.print(s2.charAt(i));
+            }
+        }
+    }
+}
+//RSA
+import java.util.Scanner;
+public class rsa {
+    public static void main(String args[])
+    {
+        Scanner sc=new Scanner(System.in);
+        int p,q,n,z,d=0,e,i;
+        System.out.println("Enter the number to be encrypted and decrypted");
+        int msg=sc.nextInt();
+
+        double c,msgback;
+        System.out.println("Enter 1st prime number p");
+        p=sc.nextInt();
+        System.out.println("Enter 2nd prime number q");
+        q=sc.nextInt();
+
+        n=p*q;
+        z=(p-1)*(q-1);
+        System.out.println("the value of z = "+z);
+        for(e=2;e<z;e++)
+        {
+            if(gcd(e,z)==1)
+            {
+                break;
+            }
+        }
+        System.out.println("the value of e = "+e);
+        for(i=1;;i++){
+            if((e*i)%z==1){
+                d=i;
+                break;
+            }
+        }
+        System.out.println("the value of d = "+d);
+        c=(Math.pow(msg,e))%n;
+        System.out.println("Encrypted message is : -");
+        System.out.println(c);
+        msgback=(Math.pow(c,d))%n;
+        System.out.println("Derypted message is : -");
+        System.out.println(msgback);
+    }
+    static int gcd(int e, int z)
+    {
+        if(e==0)
+            return z;
+        else
+
+        return gcd(z%e,e);
+    }
+}
+//SHA1
+import java.security.*;
+public class SHA1 {
+    public static void main(String[] a) {
+        try
+        {
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        System.out.println("Message digest object info: ");
+        System.out.println(" Algorithm = " +md.getAlgorithm());
+        System.out.println(" Provider = " +md.getProvider());
+        System.out.println(" ToString = " +md.toString());
+        String input = ""; md.update(input.getBytes()); byte[] output = md.digest();
+        System.out.println();
+        System.out.println("SHA1(\""+input+"\") = " +bytesToHex(output));
+        input = "abc"; md.update(input.getBytes()); output = md.digest(); System.out.println();
+        System.out.println("SHA1(\" "+input+"\") = " +bytesToHex(output));
+        input = "abcdefghijklmnopqrstuvwxyz"; md.update(input.getBytes());
+        output = md.digest();
+        System.out.println();
+        System.out.println("SHA1(\"" +input+"\") = " +bytesToHex(output)); System.out.println("");
+    }
+    catch (Exception e)
+    {
+        System.out.println("Exception: " +e);
+    }
+    }
+    public static String bytesToHex(byte[] b)
+    {
+        char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        StringBuffer buf = new StringBuffer();
+        for (int j=0; j<b.length; j++) {
+            buf.append(hexDigit[(b[j] >> 4) & 0x0f]);
+            buf.append(hexDigit[b[j] & 0x0f]);
+        }
+        return buf.toString();
+    }
+
+}
+//Vignere
+import java.util.ArrayList;
+import java.util.Scanner;
+public class vignere {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        char al[]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        int k=0,p=0;
+        String res="",res1="";
+        System.out.println("enter the key");
+        String key=sc.nextLine();
+        System.out.println("enter the plain text");
+        StringBuilder msg=new StringBuilder(sc.next());
+        char arr[]=key.toCharArray();
+        int n=arr.length;
+        ArrayList<Character> keyarr=new ArrayList<Character>();
+        if((msg.length()+1)%2==0) {
+            for(int i=0;i<msg.length();i++) {
+                keyarr.add(arr[i%n]);
+            }
+        }else {
+            msg.append('x');
+            for(int i=0;i<msg.length();i++) {
+                keyarr.add(arr[i%n]);    	  }      }
+
+        for(int i=0;i<msg.length();i++) {
+            char c=msg.charAt(i);
+            char c1=keyarr.get(i);
+            for(int j=0;j<al.length;j++) {
+                if(c==al[j]) {
+                    p=j;
+                }
+                if(c1==al[j]) {
+                    k=j;
+                }
+            }
+            int num=(k+p)%26;
+            res+=al[num];
+        }
+        System.out.println("Encrypted text= "+res);
+        for(int i=0;i<res.length();i++) {
+            char c=res.charAt(i);
+            char c1=keyarr.get(i);
+            for(int j=0;j<al.length;j++) {
+                if(c==al[j]) {
+                    p=j;
+                }
+                if(c1==al[j]) {
+                    k=j;
+                }
+            }
+            int num=Math.abs((k-p))%26;
+            res1+=al[num];
+        }
+        System.out.println("Decrypted Text=  "+res1);
+    }
+}
