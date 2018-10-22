@@ -1,0 +1,67 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.TreeSet;
+
+public class Diffie {
+    public static void main(String[] args) {
+                Scanner sc=new Scanner(System.in);
+        int xa,xb,ya,yb,p,ppr,k1,k2;
+        System.out.println("Enter A's Private Key");
+        xa=sc.nextInt();
+        System.out.println("Enter B's Private key");
+        xb=sc.nextInt();
+        System.out.println("Enter a prime Number");
+        p=sc.nextInt();
+          ArrayList<Integer> al = new ArrayList <Integer>(); 
+        int a[] = new int[p-1];
+        for(int i = p-2;i>=0;i--){
+            int k = i+1;
+            for(int j = 1;j<=p-1;j++){
+            int x = (int)(Math.pow(k,j))%p;
+            
+            al.add(x);
+            }
+            
+        }
+        
+       int k =0;
+       ArrayList <Integer> pr = new ArrayList<Integer>();
+       int pows[][] = new int[p-1][p-1];
+       for(int i=0;i<p-1;i++){
+           for( int j=0;j<p-1;j++){
+               pows[i][j] = al.get(k++);
+           }
+       }
+       TreeSet<Integer> hl = new TreeSet<Integer>();
+       for(int i=0;i<10;i++){
+           
+         
+           int q = pows[i][0];
+           for( int j=0;j<p-1;j++){
+               hl.add(pows[i][j]);
+               
+          
+           }
+           if(hl.size()==p-1)
+               pr.add(q);
+           hl.clear();
+           
+       }       // System.out.print(pr.get(0));
+        
+        
+        //System.out.println("Enter a Primitive Root of a prime number");
+        ppr=pr.get(0);
+        ya= (int)Math.pow(ppr,xa)%p;
+        yb=(int)Math.pow(ppr,xb)%p;
+        k1=(int)Math.pow(ya,xb)%p;
+        k2=(int)Math.pow(yb,xa)%p;
+        System.out.println(k1);
+        System.out.println(k2);
+        if(k1==k2){
+            System.out.println("Success");
+        }
+        else
+            System.out.println("Check");
+            
+    }
+    }
