@@ -1,0 +1,39 @@
+POM.XML
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XML chema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"> <modelVersion>4.0.0</modelVersion> <groupId>com.mycompany</groupId>
+<artifactId>MavenO GiCDIProject</artifactId> <version>1.0-SN PSHOT</version> <packaging>pom</packaging><properties> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> </properties> <dependencyManagement><dependencies><dependency> <groupId>org.osgi</groupId>
+<artifactId>org.osgi.core</artifactId>
+<version>4.2.0</version>
+<scope>provided</scope>
+</dependency></dependencies></dependencyManagement>
+</project>
+
+Hello.java
+com.mycompany.mavenhelloserviceapi; 
+public interface Hello {
+	String sayHello(String name);
+}
+
+
+HelloImpl.java
+
+public class HelloImpl implements Hello { public String sayHello(String name){
+return "Hello" +name;
+}}
+
+
+Activator.java
+
+package com.mycompany.mavenhelloserviceimpl;
+import org.osgi.framework.BundleActivator; 
+import org.osgi.framework.BundleContext;
+public class Activator implements BundleActivator {
+public void start(BundleContext context) throws Exception { // TODO add activation code here
+System.out.println("HelloActivator::start"); context.registerService(Hello.class.getName(),new HelloImpl(),null); 
+System.out.println("HelloActivator::registration of Hello Service Successfull");
+}
+public void stop(BundleContext context) throws Exception { // TODO add deactivation code here
+context.ungetService(context.getServiceReference(Hello.class.get ame()));
+ System.out.println("HelloActivator stopped");
+}
+}

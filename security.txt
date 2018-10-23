@@ -1,0 +1,16 @@
+wget http://www.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo_latest_all.deb
+sudo dpkg -i globus-toolkit-repo_latest_all.deb
+ sudo apt-get update
+ sudo apt-get install globus-data-management-client
+ sudo apt-get install globus-gridftp
+ sudo apt-get install globus-gram5
+ sudo apt-get install globus-gsi
+ sudo apt-get install globus-data-management-server
+ sudo apt-get install globus-data-management-client
+ sudo apt-get install globus-data-management-sdk
+ sudo apt-get install globus-resource-management-server
+ sudo apt-get install globus-resource-management-client
+ sudo apt-get install globus-resource-management-sdk
+ sudo apt-get install myproxy
+ sudo apt-get install gsi-openssh
+ sudo apt-get install globus-gridftp globus-gram5 globus-gsi myproxy myproxy-server myproxy-admin

@@ -1,0 +1,28 @@
+import javax.jws.WebMethod;
+import javax.jws.WebParam; 
+import javax.jws.WebService;
+
+@WebService(serviceName="MathService", targetNamespace = "http://my.org/ns/") public class MathService {
+@WebMethod(operationName = "hello"
+public String hello(@WebParam(name="name")String txt){ return "Hello"+txt+"!";
+}
+@WebMethod(operationName = "addSer"
+public String addSer(@WebParam(name="value1")int v1, @WebParam(name = "value2")int v2){
+return "Answer:" +(v1+v2)+"!";
+}
+@WebMethod(operationName = "subSer")
+public String subSer(@WebParam(name="value1")int v1, @WebParam(name = "value2")int v2){
+return "Answer:" +(v1-v2)+"!";
+}
+@WebMethod(operationName = "mulSer")
+public String mulSer(@WebParam(name="value1")int v1, @WebParam(name = "value2")int v2){
+return "Answer:" +(v1*v2)+"!";
+}
+@WebMethod(operationName = "divSer")
+public String divSer(@WebParam(name="value1")int v1, @WebParam(name = "value2")int v2){float res= 0; try
+{res = ((float)v1)/((float) v2); return "Answer:" +res+"!";
+}
+catch(ArithmeticException e){ System.out.println("Can't be divided by Zero"+e); return "Answer:" +e.getMessage().toString()+"!!!";
+}
+}
+}
