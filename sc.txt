@@ -1,0 +1,1 @@
+snort -i 2 -c C:\Snort\etc\snort.conf
