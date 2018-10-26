@@ -1,0 +1,27 @@
+export HADOOP_CLASSPATH=$(hadoop classpath)
+   68  echo $HADOOP_CALSPATH
+   69  echo $HADOOP_CLASSPATH
+   70  hadoop fs -mkdir /HadoopWC
+   71  hadoop fs -mkdir /HadoopWC/Input
+   72  hadoop ds -putc'/home/hduser/Desktop/HadoopWC/input_data/input.txt' /HadoopWC/Input
+   73  hadoop fs -put '/home/hduser/Desktop/HadoopWC/input_data/input.txt' /HadoopWC/Input
+   74  cd /home/Desktop
+   75  cd /home/hduer
+   76  cd /home/hduer/
+   77  ls
+   78  cd Desktop/
+   79  cd HadoopWC/
+   80  ls
+   81  javac -classpath ${HADOOP_CLASSPTH} -d '/home/hduser/Desktop/HadoopWC/java_classes' '/home/hduser/Desktop/HadoopWC/WordCount.java' 
+   82  javac -classpath ${HADOOP_CLASSPATH} -d '/home/hduser/Desktop/HadoopWC/java_classes' '/home/hduser/Desktop/HadoopWC/WordCount.java' 
+   83  clear
+   84  jar -cvf wc.jar -C java_classes/ .
+   85  hadoop jar '/home/hduser/Desktop/HadoopWC/wc.jar' WordCount /HadoopWC/Input /HadoopWC/Output
+   86  hadoop dfs -cat /HadoopWC/Output/*
+   87  hadoop jar '/home/hduser/Desktop/HadoopWC/wc.jar' WordCount /HadoopWC/Input /HadoopWC/Output
+   88  hadoop jar '/home/hduser/Desktop/HadoopWC/wc.jar' WordCount /HadoopWC/Input /HadoopWC/Op
+   89  hadoop dfs -cat /HadoopWC/Op/*
+   90  jps
+   91  start-yarn.sh
+   92  start-dfs.sh
+
